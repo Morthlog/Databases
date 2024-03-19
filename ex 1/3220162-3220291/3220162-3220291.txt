@@ -1,0 +1,7 @@
+3220162: Πετρουλάκης Ιωσήφ
+3220291: Δροσάτος Χαράλαμπος
+
+Endpoint: mysqlserver3220162-3220291.database.windows.net
+Database: ExercisesDatabase
+Username: examiner
+Password: pass!@w0rd
