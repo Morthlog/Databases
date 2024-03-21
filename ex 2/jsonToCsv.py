@@ -6,6 +6,7 @@ keyword = [["id", "name"]]
 
 
 def read_csv(filename):
+    global hasKeyword, keyword
     file = open(filename, encoding="utf-8")
     csvreader = csv.reader(file)
     next(csvreader)  # skip the header row
@@ -14,11 +15,11 @@ def read_csv(filename):
         element = ast.literal_eval(json_string)
         for data in element:  # reads only elements where json in not empty
             has_keyword_entry = [row[0], data['id']]
-            if has_keyword_entry not in hasKeyword:  # dont include duplicates
-                hasKeyword.append(has_keyword_entry)
+            hasKeyword.append(has_keyword_entry)
             keyword_entry = [data['id'], data['name']]
-            if keyword_entry not in keyword:  # dont include duplicates
-                keyword.append(keyword_entry)
+            keyword.append(keyword_entry)
+    hasKeyword = list(set(map(tuple, hasKeyword)))
+    keyword = list(set(map(tuple, keyword)))
     file.close()
 
 
