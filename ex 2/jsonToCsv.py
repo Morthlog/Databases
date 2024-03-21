@@ -10,16 +10,18 @@ def read_csv(filename):
     file = open(filename, encoding="utf-8")
     csvreader = csv.reader(file)
     next(csvreader)  # skip the header row
+    temphaskey = []
+    tempkeyword = []
     for row in csvreader:
         json_string = row[1]  # read json
         element = ast.literal_eval(json_string)
         for data in element:  # reads only elements where json in not empty
             has_keyword_entry = [row[0], data['id']]
-            hasKeyword.append(has_keyword_entry)
+            temphaskey.append(has_keyword_entry)
             keyword_entry = [data['id'], data['name']]
-            keyword.append(keyword_entry)
-    hasKeyword = list(set(map(tuple, hasKeyword)))
-    keyword = list(set(map(tuple, keyword)))
+            tempkeyword.append(keyword_entry)
+    hasKeyword.extend(set(map(tuple, temphaskey)))
+    keyword.extend(set(map(tuple, tempkeyword)))
     file.close()
 
 
