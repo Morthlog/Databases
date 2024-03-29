@@ -1,0 +1,10 @@
+c:\Me\Uni\4rd Semester\Databases\myDatabaseProject\DatabaseProject\bin\Debug\DatabaseProject.dacpac
+c:\Me\Uni\4rd Semester\Databases\myDatabaseProject\DatabaseProject\bin\Debug\DatabaseProject.dll
+c:\Me\Uni\4rd Semester\Databases\myDatabaseProject\DatabaseProject\bin\Debug\DatabaseProject.pdb
+c:\Me\Uni\4rd Semester\Databases\myDatabaseProject\DatabaseProject\obj\Debug\DatabaseProject.sqlproj.AssemblyReference.cache
+c:\Me\Uni\4rd Semester\Databases\myDatabaseProject\DatabaseProject\obj\Debug\Model.xml
+c:\Me\Uni\4rd Semester\Databases\myDatabaseProject\DatabaseProject\obj\Debug\refactor.xml
+c:\Me\Uni\4rd Semester\Databases\myDatabaseProject\DatabaseProject\obj\Debug\postdeploy.sql
+c:\Me\Uni\4rd Semester\Databases\myDatabaseProject\DatabaseProject\obj\Debug\predeploy.sql
+c:\Me\Uni\4rd Semester\Databases\myDatabaseProject\DatabaseProject\obj\Debug\DatabaseProject.dll
+c:\Me\Uni\4rd Semester\Databases\myDatabaseProject\DatabaseProject\obj\Debug\DatabaseProject.pdb
