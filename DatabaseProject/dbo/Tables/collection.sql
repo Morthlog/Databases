@@ -1,10 +1,7 @@
 CREATE TABLE [dbo].[collection] (
-    [id]   INT           NOT NULL,
-    [name] VARCHAR (300) NOT NULL
+    [id]   INT            NOT NULL,
+    [name] NVARCHAR (300) NOT NULL,
+    CONSTRAINT [PK_collection_id] PRIMARY KEY CLUSTERED ([id] ASC)
 );
-GO
-
-ALTER TABLE [dbo].[collection]
-    ADD CONSTRAINT [PK_collection_id] PRIMARY KEY CLUSTERED ([id] ASC);
 GO
 
