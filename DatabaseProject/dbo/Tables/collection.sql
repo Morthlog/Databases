@@ -3,5 +3,7 @@ CREATE TABLE [dbo].[collection] (
     [name] NVARCHAR (300) NOT NULL,
     CONSTRAINT [PK_collection_id] PRIMARY KEY CLUSTERED ([id] ASC)
 );
+
+
 GO
 

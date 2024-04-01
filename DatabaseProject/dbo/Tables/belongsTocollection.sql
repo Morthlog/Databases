@@ -4,6 +4,7 @@ CREATE TABLE [dbo].[belongsTocollection] (
     CONSTRAINT [FK_belong_collection_id] FOREIGN KEY ([collection_id]) REFERENCES [dbo].[collection] ([id]),
     CONSTRAINT [FK_belong_movie_id] FOREIGN KEY ([movie_id]) REFERENCES [dbo].[movie] ([id])
 );
-GO
 
+
+GO
 
