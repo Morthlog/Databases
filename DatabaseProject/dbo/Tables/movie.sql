@@ -11,8 +11,10 @@ CREATE TABLE [dbo].[movie] (
     [popularity]        FLOAT (53)      NOT NULL,
     [release_date]      DATE            NULL,
     [revenue]           INT             NOT NULL,
-    [runtime]           FLOAT (53)      NULL,
+    [runtime]           SMALLINT        NULL,
     CONSTRAINT [PK_movie_id] PRIMARY KEY CLUSTERED ([id] ASC)
 );
+
+
 GO
 

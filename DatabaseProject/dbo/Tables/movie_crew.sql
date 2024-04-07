@@ -9,5 +9,7 @@ CREATE TABLE [dbo].[movie_crew] (
     CONSTRAINT [PK_movieCrew_cid] PRIMARY KEY CLUSTERED ([cid] ASC),
     CONSTRAINT [FK_moviecrew_movie_id] FOREIGN KEY ([movie_id]) REFERENCES [dbo].[movie] ([id])
 );
+
+
 GO
 
