@@ -1,4 +1,4 @@
-/*Εμφάνισε όλους τους τίτλους ταινιών φαντασίας και το μέσο όρο τους, με μέση βαθμολογία πάνω  από 4
+/* Εμφάνισε όλους τους τίτλους ταινιών φαντασίας και τη μέση βαθμολογία τους, με μέση βαθμολογία πάνω από 4
 --Output: 14 rows
 */
 SELECT m.title, AVG(r.rating) AS avg_rating
@@ -19,7 +19,7 @@ JOIN movie_cast mc ON m.id = mc.movie_id
 WHERE mc.name = 'Arnold Schwarzenegger'
 
 
-/* Εμφάνισε όλους τους  τίτλους ταινιών περιπέτειας , το budget και την ημερομηνία κυκλοφορίας, με budget > 100.000.000 μετά το 2000.
+/* Εμφάνισε όλους τους  τίτλους ταινιών περιπέτειας, το budget και την ημερομηνία κυκλοφορίας, με budget > 100.000.000 μετά το 2000.
 Output: 29 rows
 */
 SELECT m.title,m.budget,m.release_date
@@ -29,17 +29,17 @@ JOIN genre g ON hg.genre_id = g.id
 WHERE g.name = 'Adventure' AND m.budget>100000000 AND YEAR(m.release_date)> 2000
 
 
-/* Εμφάνισε όλους τους τίτλους ταινιών,το revenue και το rating τους, με revenue >900.000.000 σε φθίνουσα σειρά.
-Output: 7 rows
+/* Εμφάνισε όλους τους τίτλους ταινιών,το revenue και τη μέση βαθμολογία τους, με revenue >900.000.000 σε φθίνουσα σειρά ως προς το revenue.
+Output: 8 rows
 */
 SELECT m.title,m.revenue, AVG(r.rating) AS avg_rating
 FROM movie m
-JOIN ratings r ON m.id = r.movie_id
+LEFT OUTER JOIN ratings r ON m.id = r.movie_id
 WHERE m.revenue > 900000000
 GROUP BY m.title, m.revenue
 ORDER BY revenue DESC;
 
-/* Εμφάνισε τις τοπ 10 πιο δημοφιλεις ταινίες με λέξεις κλειδιά που να περιέχουν "bomb" ή "atomic".
+/* Εμφάνισε τις τοπ 10 πιο δημοφιλείς ταινίες με λέξεις κλειδιά που να περιέχουν "bomb" ή "atomic".
 Output: 10 rows*/
 SELECT DISTINCT TOP(10)  m.title, m.popularity
 FROM movie m
@@ -48,7 +48,7 @@ JOIN keyword k ON hk.key_id = k.id
 WHERE k.name LIKE '%bomb%'OR k.name LIKE '%atomic%'
 ORDER BY m.popularity DESC;
 
-/* Εμφάνισε τα studio των τοπ 10 πιο κερδοφόρων ταινιών
+/* Εμφάνισε τις εταιρείες παραγωγής και τους τίτλους των τοπ 10 πιο κερδοφόρων ταινιών
 Output: 24 rows*/
 Select pc.name, m.title
 FROM movie m
@@ -58,7 +58,7 @@ where m.id IN (
     SELECT TOP(10) id
     FROM movie
     ORDER BY revenue DESC)
-    ORDER BY m.title
+ORDER BY m.title;
 	
 /*
 Εμφάνισε τους 10 καλύτερους σκηνοθέτες με τις καλύτερες σε βαθμολογία ταινίες τους, σε φθίνουσα σειρά και τα ratings τους
