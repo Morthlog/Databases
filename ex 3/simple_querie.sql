@@ -16,7 +16,7 @@ Output: 32 rows
 SELECT m.title
 FROM movie m
 JOIN movie_cast mc ON m.id = mc.movie_id
-WHERE mc.name = 'Arnold Schwarzenegger'
+WHERE mc.name = 'Arnold Schwarzenegger';
 
 
 /* Εμφάνισε όλους τους  τίτλους ταινιών περιπέτειας, το budget και την ημερομηνία κυκλοφορίας, με budget > 100.000.000 μετά το 2000.
@@ -26,7 +26,7 @@ SELECT m.title,m.budget,m.release_date
 FROM movie m
 JOIN hasgenre hg ON m.id = hg.movie_id
 JOIN genre g ON hg.genre_id = g.id
-WHERE g.name = 'Adventure' AND m.budget>100000000 AND YEAR(m.release_date)> 2000
+WHERE g.name = 'Adventure' AND m.budget>100000000 AND YEAR(m.release_date)> 2000;
 
 
 /* Εμφάνισε όλους τους τίτλους ταινιών,το revenue και τη μέση βαθμολογία τους, με revenue >900.000.000 σε φθίνουσα σειρά ως προς το revenue.
@@ -75,7 +75,7 @@ WHERE c.name IN
     WHERE c.job = 'Director' AND m.id = c.movie_id
 ) 
 GROUP BY c.name, m.title
-ORDER BY 'Average Ratings' DESC
+ORDER BY 'Average Ratings' DESC;
 
 /*
 Εμφάνισε  το σύνολο του crew και cast που εργάστηκε για τη συλλογή "lord of the rings"
@@ -100,7 +100,7 @@ UNION ALL
 SELECT DISTINCT ca.name, ca.character AS 'Role'
 FROM movie m
 FULL OUTER JOIN movie_cast ca ON ca.movie_id = m.id
-WHERE ca.movie_id IN (SELECT movie_id FROM movieIDs)
+WHERE ca.movie_id IN (SELECT movie_id FROM movieIDs);
 
 /*
 Εμφάνισε τις ταινίες των εταιρειών "Walt Disney Pictures" και "Universal Pictures" με revenue > 500.000.000
@@ -116,7 +116,7 @@ WHERE m.id IN
     WHERE pr.name = 'Walt Disney Pictures'
         OR pr.name = 'Universal Pictures'
 )
-    AND m.revenue > 500000000
+    AND m.revenue > 500000000;
 
 /*
 Εμφάνισε όλες τις ταινίες με 4.5 > μέσο όρο > 3 και με τουλάχιστον 100 κριτικές
@@ -128,7 +128,7 @@ INNER JOIN ratings r ON r.movie_id = m.id
 GROUP BY m.title
 HAVING avg(r.rating) BETWEEN 3 AND 4.5
     AND COUNT(r.rating) > 100
-ORDER BY COUNT(r.rating) DESC
+ORDER BY COUNT(r.rating) DESC;
 
 /*
 Εμφάνισε όλες τις ταινίες οποιασδήποτε Batman collection με τουλάχιστον 7.5% popularity και το μεγαλύτερο revenue της που υπήρξε από ταινία
@@ -151,7 +151,7 @@ HAVING popularity >7.5 AND co.name IN
     SELECT co.name
     WHERE co.name LIKE '%Batman%'
     AND b.movie_id = m.id
-) 
+) ;
 
 /*
 Εμφάνισε τις ταινίες με το χαμηλότερο avg rating, εκτός του 0, μαζί με τον αριθμό των κριτικών
@@ -173,4 +173,4 @@ GROUP BY m.title, r.movie_id
 HAVING avg(r.rating) IN
 (
     SELECT MIN(AVG) FROM averageR
-) 
+);
