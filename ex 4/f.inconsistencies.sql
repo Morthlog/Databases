@@ -2,14 +2,8 @@
 UPDATE movie_crew
 SET gender = (
     SELECT MAX(gender)
-    FROM (
-        SELECT person_id, gender
-        FROM movie_crew 
-        UNION
-        SELECT person_id, gender
-        FROM movie_cast
-    ) AS combined_data
-    WHERE combined_data.person_id = movie_crew.person_id
+    FROM Person
+    WHERE Person.person_id = movie_crew.person_id
 )
 WHERE person_id IN (
     SELECT person_id
@@ -18,18 +12,11 @@ WHERE person_id IN (
     HAVING COUNT(DISTINCT gender) > 1
 );
 
-
 UPDATE movie_cast
 SET gender = (
     SELECT MAX(gender)
-    FROM (
-        SELECT person_id, gender
-        FROM movie_crew 
-        UNION
-        SELECT person_id, gender
-        FROM movie_cast
-    ) AS combined_data
-    WHERE combined_data.person_id = movie_cast.person_id
+    FROM Person
+    WHERE Person.person_id = movie_cast.person_id
 )
 WHERE person_id IN (
     SELECT person_id
@@ -43,14 +30,8 @@ WHERE person_id IN (
 UPDATE movie_cast
 SET name = (
     SELECT TOP(1) name
-    FROM (
-        SELECT person_id, name
-        FROM movie_crew 
-        UNION 
-        SELECT person_id, name
-        FROM movie_cast
-    ) AS combined_data
-    WHERE combined_data.person_id = movie_cast.person_id
+    FROM Person
+    WHERE Person.person_id = movie_cast.person_id
 )
 WHERE person_id IN (
     SELECT person_id
@@ -62,14 +43,8 @@ WHERE person_id IN (
 UPDATE movie_crew
 SET name = (
     SELECT TOP(1) name
-    FROM (
-        SELECT person_id, name
-        FROM movie_crew 
-        UNION
-        SELECT person_id, name
-        FROM movie_cast
-    ) AS combined_data
-    WHERE combined_data.person_id = movie_crew.person_id
+    FROM Person
+    WHERE Person.person_id = movie_crew.person_id
 )
 WHERE person_id IN (
     SELECT person_id
