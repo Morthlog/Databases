@@ -1,7 +1,7 @@
 SELECT person_id
 FROM Person
 GROUP BY person_id
-HAVING COUNT(*) > 1
+HAVING COUNT(*) > 1;
 
 /*=========Αντικατάσταση των διπλότυπων με το μέγιστο genre (υποθέτουμε οτι έχει δυο, το σωστό και το άγνωστο)===========*/
 UPDATE movie_crew
