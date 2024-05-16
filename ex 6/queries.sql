@@ -79,21 +79,21 @@ WHERE cr.job = 'Director' AND EXISTS
     FROM movie m
     INNER JOIN hasGenre h ON m.id = h.movie_id
     INNER JOIN genre g ON g.id = h.genre_id
-    WHERE g.name = 'Action' AND cr.movie_id = m.id
+    WHERE g.name = 'Comedy' AND cr.movie_id = m.id
 ) AND EXISTS
 (
     SELECT m.id
     FROM movie m
     INNER JOIN hasGenre h ON m.id = h.movie_id
     INNER JOIN genre g ON g.id = h.genre_id
-    WHERE g.name = 'Adventure' AND cr.movie_id = m.id
+    WHERE g.name = 'Horror' AND cr.movie_id = m.id
 ) AND NOT EXISTS
 (
     SELECT m.id
     FROM movie m
     INNER JOIN hasGenre h ON m.id = h.movie_id
     INNER JOIN genre g ON g.id = h.genre_id
-    WHERE g.name NOT IN ('Adventure', 'Action') AND cr.movie_id = m.id
+    WHERE g.name NOT IN ('Comedy', 'Horror') AND cr.movie_id = m.id
 )
 
 /*11. Να απαντηθεί το προηγούμενο ερώτημα χρησιμοποιώντας τελεστές για σύνολα UNION,
