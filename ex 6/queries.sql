@@ -85,7 +85,7 @@ FROM movie m JOIN
     GROUP BY YEAR(release_date)
 ) as mx ON mx.year=YEAR(m.release_date)
 WHERE mx.max_budget=m.budget
-ORDER BY year, title
+ORDER BY year, title;
 
 
 /*10. Χρησιμοποιώντας εμφώλευση, επιστρέψτε τους σκηνοθέτες (name, surname) που
@@ -177,4 +177,4 @@ WITH popular_movies AS (
     HAVING COUNT(user_id)>10)
 SELECT p1.movie_id as id1, p2.movie_id as id2
 FROM popular_movies p1 
-JOIN popular_movies p2 ON p1.movie_id<p2.movie_id
+JOIN popular_movies p2 ON p1.movie_id<p2.movie_id;
