@@ -36,17 +36,29 @@ GROUP BY YEAR(m.release_date);
 
 /*5. Το υψηλότερο budget ταινίας ανά έτος (year, max_budget), όταν το budget αυτό
 δεν είναι μηδενικό.*/
+SELECT YEAR(release_date) as year, MAX(budget) as max_budget
+FROM movie
+WHERE budget > 0
+GROUP BY YEAR(release_date);
 
 
 
 /*6. Τις συλλογές του πίνακα Collection που αναφέρονται σε τριλογίες, δηλαδή η
 συλλογή έχει ακριβώς 3 ταινίες (trilogy_name).*/
-
-
+SELECT name
+FROM collection
+WHERE id in(
+	SELECT collection_id
+	FROM belongsTocollection
+	GROUP BY collection_id
+	HAVING COUNT(movie_id)=3
+);
 
 /*7. Για κάθε χρήστη του πίνακα Ratings, να επιστραφούν η μέση βαθμολογία του χρήστη
 και ο αριθμός των βαθμολογιών του (avg_rating, rating_count).*/
-
+SELECT user_id, ROUND(AVG(rating),2) as avg_rating, COUNT(rating) as rating_count
+FROM ratings
+GROUP BY user_id;
 
 
 /*8. Οι 10 ταινίες με το υψηλότερο budget (movie_title, budget). Σε περίπτωση που
@@ -62,7 +74,16 @@ ORDER BY m.budget DESC;
 /*9. Χρησιμοποιώντας το ερώτημα 5, βρείτε με εμφώλευση την ταινία (ταινίες) με το
 μεγαλύτερο budget ανά χρονιά (year, movies_with_max_budget), έχοντας
 ταξινόμηση ως προς το έτος και το όνομα της ταινίας.*/
-
+SELECT year, title as movies_with_max_budget
+FROM movie m JOIN 
+(
+    SELECT YEAR(release_date) as year, MAX(budget) as max_budget
+    FROM movie
+    WHERE budget > 0
+    GROUP BY YEAR(release_date)
+) as mx ON mx.year=YEAR(m.release_date)
+WHERE  mx.max_budget=m.budget AND YEAR(m.release_date)=mx.year
+ORDER BY year, title
 
 
 /*10. Χρησιμοποιώντας εμφώλευση, επιστρέψτε τους σκηνοθέτες (name, surname) που
@@ -112,7 +133,32 @@ WHERE EXISTS (
 
 /*11. Να απαντηθεί το προηγούμενο ερώτημα χρησιμοποιώντας τελεστές για σύνολα UNION,
 INTERSECT, EXCEPT.*/
+WITH filtered AS (
+    SELECT cr.name
+    FROM hasGenre h
+    JOIN movie_crew cr ON cr.movie_id = h.movie_id
+    INNER JOIN genre g ON g.id = h.genre_id
+    WHERE g.name = 'Comedy' AND cr.job = 'DIRECTOR'
 
+    INTERSECT
+
+    SELECT cr.name
+    FROM hasGenre h
+    JOIN movie_crew cr ON cr.movie_id = h.movie_id
+    INNER JOIN genre g ON g.id = h.genre_id
+    WHERE g.name = 'Horror' AND cr.job = 'DIRECTOR'
+
+    EXCEPT
+
+    SELECT cr.name
+    FROM hasGenre h
+    JOIN movie_crew cr ON cr.movie_id = h.movie_id
+    INNER JOIN genre g ON g.id = h.genre_id
+    WHERE g.name NOT IN ('Comedy', 'Horror') AND cr.job = 'DIRECTOR'
+)
+
+SELECT SUBSTRING(f.name, 0, CHARINDEX(' ', f.name)) as name, SUBSTRING(f.name, CHARINDEX(' ', f.name), LEN(f.name)) as surname
+FROM filtered f
 
 
 /*Θεωρείστε ότι ένα ζεύγος ταινιών είναι δημοφιλές όταν υπάρχουν πάνω από 10 χρήστες που
@@ -121,3 +167,14 @@ INTERSECT, EXCEPT.*/
 με το όνομα Popular_Movie_Pairs που περιέχει τα ids από τα δημοφιλή ζεύγη
 ταινιών (id1,id2).*/
 
+CREATE VIEW Popular_Movie_Pairs AS
+WITH popular_movies AS (
+    SELECT movie_id,COUNT(user_id) as total_users
+    FROM ratings
+    WHERE rating>4
+    GROUP BY movie_id
+    HAVING COUNT(user_id)>10)
+SELECT p1.movie_id as id1,p2.movie_id as id2
+FROM popular_movies p1 
+JOIN popular_movies p2 ON
+p1.movie_id<p2.movie_id
