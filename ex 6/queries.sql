@@ -28,7 +28,9 @@ GROUP BY YEAR(m.release_date), g.name;
 /*4. Για τον αγαπημένο σας ηθοποιό, το σύνολο των εσόδων (revenue) για τις ταινίες στις
 οποίες έχει συμμετάσχει ανά έτος (year, revenues_per_year).*/
 
-SELECT YEAR(m.release_date) as year, SUM(m.revenue) as revenues_per_year
+SELECT YEAR(m.release_date) as year, 
+    CASE WHEN SUM(m.revenue) = '0' THEN '0'
+        ELSE FORMAT(SUM(m.revenue), '#,###') END as revenues_per_year
 FROM movie m
 INNER JOIN movie_cast mc ON m.id = mc.movie_id
 WHERE mc.name = 'Leonardo DiCaprio'
@@ -36,7 +38,7 @@ GROUP BY YEAR(m.release_date);
 
 /*5. Το υψηλότερο budget ταινίας ανά έτος (year, max_budget), όταν το budget αυτό
 δεν είναι μηδενικό.*/
-SELECT YEAR(release_date) as year, MAX(budget) as max_budget
+SELECT YEAR(release_date) as year, FORMAT(MAX(budget), '#,###') as max_budget
 FROM movie
 WHERE budget > 0
 GROUP BY YEAR(release_date);
@@ -45,7 +47,7 @@ GROUP BY YEAR(release_date);
 
 /*6. Τις συλλογές του πίνακα Collection που αναφέρονται σε τριλογίες, δηλαδή η
 συλλογή έχει ακριβώς 3 ταινίες (trilogy_name).*/
-SELECT name
+SELECT name as trilogy_name
 FROM collection
 WHERE id in(
 	SELECT collection_id
@@ -56,7 +58,7 @@ WHERE id in(
 
 /*7. Για κάθε χρήστη του πίνακα Ratings, να επιστραφούν η μέση βαθμολογία του χρήστη
 και ο αριθμός των βαθμολογιών του (avg_rating, rating_count).*/
-SELECT user_id, ROUND(AVG(rating),2) as avg_rating, COUNT(rating) as rating_count
+SELECT ROUND(AVG(rating),2) as avg_rating, COUNT(rating) as rating_count
 FROM ratings
 GROUP BY user_id;
 
@@ -82,7 +84,7 @@ FROM movie m JOIN
     WHERE budget > 0
     GROUP BY YEAR(release_date)
 ) as mx ON mx.year=YEAR(m.release_date)
-WHERE  mx.max_budget=m.budget AND YEAR(m.release_date)=mx.year
+WHERE mx.max_budget=m.budget
 ORDER BY year, title
 
 
@@ -119,7 +121,6 @@ WHERE EXISTS (
         WHERE cr2.person_id = dir.person_id AND cr2.job = 'Director'
     )
 ) AND NOT EXISTS (
-
     SELECT h.movie_id
     FROM hasGenre h
     INNER JOIN genre g ON g.id = h.genre_id
@@ -158,7 +159,7 @@ WITH filtered AS (
 )
 
 SELECT SUBSTRING(f.name, 0, CHARINDEX(' ', f.name)) as name, SUBSTRING(f.name, CHARINDEX(' ', f.name), LEN(f.name)) as surname
-FROM filtered f
+FROM filtered f;
 
 
 /*Θεωρείστε ότι ένα ζεύγος ταινιών είναι δημοφιλές όταν υπάρχουν πάνω από 10 χρήστες που
@@ -174,7 +175,6 @@ WITH popular_movies AS (
     WHERE rating>4
     GROUP BY movie_id
     HAVING COUNT(user_id)>10)
-SELECT p1.movie_id as id1,p2.movie_id as id2
+SELECT p1.movie_id as id1, p2.movie_id as id2
 FROM popular_movies p1 
-JOIN popular_movies p2 ON
-p1.movie_id<p2.movie_id
+JOIN popular_movies p2 ON p1.movie_id<p2.movie_id
