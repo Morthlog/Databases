@@ -83,7 +83,7 @@ FROM movie m JOIN
     GROUP BY YEAR(release_date)
 ) as mx ON mx.year=YEAR(m.release_date)
 WHERE  mx.max_budget=m.budget AND YEAR(m.release_date)=mx.year
-ORDER BY year, title
+ORDER BY year, title;
 
 
 /*10. Χρησιμοποιώντας εμφώλευση, επιστρέψτε τους σκηνοθέτες (name, surname) που
@@ -158,7 +158,7 @@ WITH filtered AS (
 )
 
 SELECT SUBSTRING(f.name, 0, CHARINDEX(' ', f.name)) as name, SUBSTRING(f.name, CHARINDEX(' ', f.name), LEN(f.name)) as surname
-FROM filtered f
+FROM filtered f;
 
 
 /*Θεωρείστε ότι ένα ζεύγος ταινιών είναι δημοφιλές όταν υπάρχουν πάνω από 10 χρήστες που
@@ -177,4 +177,4 @@ WITH popular_movies AS (
 SELECT p1.movie_id as id1,p2.movie_id as id2
 FROM popular_movies p1 
 JOIN popular_movies p2 ON
-p1.movie_id<p2.movie_id
+p1.movie_id<p2.movie_id;
