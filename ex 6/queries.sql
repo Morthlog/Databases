@@ -56,7 +56,7 @@ WHERE id in(
 
 /*7. Για κάθε χρήστη του πίνακα Ratings, να επιστραφούν η μέση βαθμολογία του χρήστη
 και ο αριθμός των βαθμολογιών του (avg_rating, rating_count).*/
-SELECT ROUND(AVG(rating),2) as avg_rating, COUNT(rating) as rating_count
+SELECT user_id, ROUND(AVG(rating),2) as avg_rating, COUNT(rating) as rating_count
 FROM ratings
 GROUP BY user_id;
 
@@ -124,7 +124,7 @@ WITH filtered AS (
     FROM hasGenre h
     JOIN movie_crew cr ON cr.movie_id = h.movie_id
     INNER JOIN genre g ON g.id = h.genre_id
-    WHERE g.name = 'family' AND cr.job = 'DIRECTOR'
+    WHERE g.name = 'Comedy' AND cr.job = 'DIRECTOR'
 
     INTERSECT
 
@@ -132,7 +132,7 @@ WITH filtered AS (
     FROM hasGenre h
     JOIN movie_crew cr ON cr.movie_id = h.movie_id
     INNER JOIN genre g ON g.id = h.genre_id
-    WHERE g.name = 'animation' AND cr.job = 'DIRECTOR'
+    WHERE g.name = 'Horror' AND cr.job = 'DIRECTOR'
 
     EXCEPT
 
@@ -140,7 +140,7 @@ WITH filtered AS (
     FROM hasGenre h
     JOIN movie_crew cr ON cr.movie_id = h.movie_id
     INNER JOIN genre g ON g.id = h.genre_id
-    WHERE g.name NOT IN ('family', 'animation') AND cr.job = 'DIRECTOR'
+    WHERE g.name NOT IN ('Comedy', 'Horror') AND cr.job = 'DIRECTOR'
 )
 
 SELECT SUBSTRING(f.name, 0, CHARINDEX(' ', f.name)) as name, SUBSTRING(f.name, CHARINDEX(' ', f.name), LEN(f.name)) as surname
