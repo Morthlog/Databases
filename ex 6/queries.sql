@@ -71,30 +71,44 @@ ORDER BY m.budget DESC;
 (hint: Μπορούν να χρησιμοποιηθούν οι τελεστές EXISTS, NOT EXISTS μαζί με
 συνθήκη ζεύξης μεταξύ του εξωτερικού και του εσωτερικού ερωτήματος)*/
 
-SELECT SUBSTRING(cr.name, 0, CHARINDEX(' ', cr.name)) as name, SUBSTRING(cr.name, CHARINDEX(' ', cr.name), LEN(cr.name)) as surname
-FROM movie_crew cr
-WHERE cr.job = 'Director' AND EXISTS
-(
-    SELECT m.id
-    FROM movie m
-    INNER JOIN hasGenre h ON m.id = h.movie_id
+SELECT SUBSTRING(dir.name, 0, CHARINDEX(' ', dir.name)) as name, SUBSTRING(dir.name, CHARINDEX(' ', dir.name), LEN(dir.name)) as surname
+FROM (
+    SELECT DISTINCT cr.person_id, cr.name
+    FROM movie_crew cr
+    WHERE cr.job = 'Director'
+) dir
+WHERE EXISTS (
+    SELECT h.movie_id
+    FROM hasGenre h
     INNER JOIN genre g ON g.id = h.genre_id
-    WHERE g.name = 'Comedy' AND cr.movie_id = m.id
-) AND EXISTS
-(
-    SELECT m.id
-    FROM movie m
-    INNER JOIN hasGenre h ON m.id = h.movie_id
+    WHERE g.name = 'Comedy' AND h.movie_id IN
+    (
+        SELECT cr2.movie_id
+        FROM movie_crew cr2
+        WHERE cr2.person_id = dir.person_id AND cr2.job = 'Director'
+    )
+) AND EXISTS (
+    SELECT h.movie_id
+    FROM hasGenre h
     INNER JOIN genre g ON g.id = h.genre_id
-    WHERE g.name = 'Horror' AND cr.movie_id = m.id
-) AND NOT EXISTS
-(
-    SELECT m.id
-    FROM movie m
-    INNER JOIN hasGenre h ON m.id = h.movie_id
+    WHERE g.name = 'Horror' AND h.movie_id IN
+    (
+        SELECT cr2.movie_id
+        FROM movie_crew cr2
+        WHERE cr2.person_id = dir.person_id AND cr2.job = 'Director'
+    )
+) AND NOT EXISTS (
+
+    SELECT h.movie_id
+    FROM hasGenre h
     INNER JOIN genre g ON g.id = h.genre_id
-    WHERE g.name NOT IN ('Comedy', 'Horror') AND cr.movie_id = m.id
-)
+    WHERE g.name NOT IN ('Comedy', 'Horror') AND h.movie_id IN
+    (
+        SELECT cr2.movie_id
+        FROM movie_crew cr2
+        WHERE cr2.person_id = dir.person_id AND cr2.job = 'Director'
+    )
+);
 
 /*11. Να απαντηθεί το προηγούμενο ερώτημα χρησιμοποιώντας τελεστές για σύνολα UNION,
 INTERSECT, EXCEPT.*/
