@@ -5,7 +5,7 @@ SELECT Year(release_date) as year , Count(*) as 'movies_per_year'
 FROM movie
 WHERE budget > 1000000
 GROUP BY Year(release_date)
-Order By Year(release_date);
+ORDER BY year;
 
 /*2. Αριθμός ταινιών ανά είδος (genre, movies_per_genre) για ταινίες που έχουν
 budget μεγαλύτερο από 1,000,000 ή διάρκεια μεγαλύτερη από 2 ώρες.*/
@@ -15,7 +15,8 @@ FROM movie m
 INNER JOIN hasGenre h ON m.id = h.movie_id
 INNER JOIN genre g ON g.id = h.genre_id
 WHERE budget > 1000000 OR m.runtime > 120
-GROUP BY g.name;
+GROUP BY g.name
+ORDER BY genre;
 
 /*3. Αριθμός ταινιών ανά είδος και ανά έτος (genre, year, movies_per_gy) .*/
 
@@ -23,7 +24,8 @@ SELECT g.name as genre, YEAR(m.release_date) as year, COUNT(*) as movies_per_gy
 FROM movie m
 INNER JOIN hasGenre h ON m.id = h.movie_id
 INNER JOIN genre g ON g.id = h.genre_id
-GROUP BY YEAR(m.release_date), g.name;
+GROUP BY YEAR(m.release_date), g.name
+ORDER BY genre, year;
 
 /*4. Για τον αγαπημένο σας ηθοποιό, το σύνολο των εσόδων (revenue) για τις ταινίες στις
 οποίες έχει συμμετάσχει ανά έτος (year, revenues_per_year).*/
@@ -34,14 +36,16 @@ SELECT YEAR(m.release_date) as year,
 FROM movie m
 INNER JOIN movie_cast mc ON m.id = mc.movie_id
 WHERE mc.name = 'Leonardo DiCaprio'
-GROUP BY YEAR(m.release_date);
+GROUP BY YEAR(m.release_date)
+ORDER BY year;
 
 /*5. Το υψηλότερο budget ταινίας ανά έτος (year, max_budget), όταν το budget αυτό
 δεν είναι μηδενικό.*/
 SELECT YEAR(release_date) as year, FORMAT(MAX(budget), '#,###') as max_budget
 FROM movie
 WHERE budget > 0
-GROUP BY YEAR(release_date);
+GROUP BY YEAR(release_date)
+ORDER BY year;
 
 
 
@@ -54,13 +58,15 @@ WHERE id in(
 	FROM belongsTocollection
 	GROUP BY collection_id
 	HAVING COUNT(movie_id)=3
-);
+)
+ORDER BY name;
 
 /*7. Για κάθε χρήστη του πίνακα Ratings, να επιστραφούν η μέση βαθμολογία του χρήστη
 και ο αριθμός των βαθμολογιών του (avg_rating, rating_count).*/
 SELECT ROUND(AVG(rating),2) as avg_rating, COUNT(rating) as rating_count
 FROM ratings
-GROUP BY user_id;
+GROUP BY user_id
+ORDER BY avg_rating, rating_count;
 
 
 /*8. Οι 10 ταινίες με το υψηλότερο budget (movie_title, budget). Σε περίπτωση που
