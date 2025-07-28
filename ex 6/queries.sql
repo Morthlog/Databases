@@ -1,15 +1,13 @@
-/*1. Αριθμός ταινιών ανά έτος (year, movies_per_year) για ταινίες με budget ταινίας
-μεγαλύτερο από 1,000,000.*/
-
+/* 1. Number of movies per year (year, movies_per_year) for movies with a budget 
+greater than 1,000,000. */
 SELECT Year(release_date) as year , Count(*) as 'movies_per_year'
 FROM movie
 WHERE budget > 1000000
 GROUP BY Year(release_date)
 ORDER BY year;
 
-/*2. Αριθμός ταινιών ανά είδος (genre, movies_per_genre) για ταινίες που έχουν
-budget μεγαλύτερο από 1,000,000 ή διάρκεια μεγαλύτερη από 2 ώρες.*/
-
+/* 2. Number of movies per genre (genre, movies_per_genre) for movies with a budget 
+greater than 1,000,000 or runtime longer than 2 hours. */
 SELECT g.name as genre, Count(*) as 'movies_per_genre'
 FROM movie m
 INNER JOIN hasGenre h ON m.id = h.movie_id
@@ -18,8 +16,7 @@ WHERE budget > 1000000 OR m.runtime > 120
 GROUP BY g.name
 ORDER BY genre;
 
-/*3. Αριθμός ταινιών ανά είδος και ανά έτος (genre, year, movies_per_gy) .*/
-
+/* 3. Number of movies per genre and per year (genre, year, movies_per_gy). */
 SELECT g.name as genre, YEAR(m.release_date) as year, COUNT(*) as movies_per_gy
 FROM movie m
 INNER JOIN hasGenre h ON m.id = h.movie_id
@@ -27,9 +24,8 @@ INNER JOIN genre g ON g.id = h.genre_id
 GROUP BY YEAR(m.release_date), g.name
 ORDER BY genre, year;
 
-/*4. Για τον αγαπημένο σας ηθοποιό, το σύνολο των εσόδων (revenue) για τις ταινίες στις
-οποίες έχει συμμετάσχει ανά έτος (year, revenues_per_year).*/
-
+/* 4. For your favorite actor, total revenue of movies they starred in per year 
+(year, revenues_per_year). */
 SELECT YEAR(m.release_date) as year, 
     CASE WHEN SUM(m.revenue) = '0' THEN '0'
         ELSE FORMAT(SUM(m.revenue), '#,###') END as revenues_per_year
@@ -39,18 +35,14 @@ WHERE mc.name = 'Leonardo DiCaprio'
 GROUP BY YEAR(m.release_date)
 ORDER BY year;
 
-/*5. Το υψηλότερο budget ταινίας ανά έτος (year, max_budget), όταν το budget αυτό
-δεν είναι μηδενικό.*/
+/* 5. Highest movie budget per year (year, max_budget), excluding zero-budget movies. */
 SELECT YEAR(release_date) as year, FORMAT(MAX(budget), '#,###') as max_budget
 FROM movie
 WHERE budget > 0
 GROUP BY YEAR(release_date)
 ORDER BY year;
 
-
-
-/*6. Τις συλλογές του πίνακα Collection που αναφέρονται σε τριλογίες, δηλαδή η
-συλλογή έχει ακριβώς 3 ταινίες (trilogy_name).*/
+/* 6. Collections from the Collection table that refer to trilogies, i.e., collections with exactly 3 movies (trilogy_name). */
 SELECT name as trilogy_name
 FROM collection
 WHERE id in(
@@ -61,27 +53,22 @@ WHERE id in(
 )
 ORDER BY name;
 
-/*7. Για κάθε χρήστη του πίνακα Ratings, να επιστραφούν η μέση βαθμολογία του χρήστη
-και ο αριθμός των βαθμολογιών του (avg_rating, rating_count).*/
+/* 7. For each user in the Ratings table, return their average rating and the number of ratings 
+(avg_rating, rating_count). */
 SELECT ROUND(AVG(rating),2) as avg_rating, COUNT(rating) as rating_count
 FROM ratings
 GROUP BY user_id
 ORDER BY avg_rating, rating_count;
 
-
-/*8. Οι 10 ταινίες με το υψηλότερο budget (movie_title, budget). Σε περίπτωση που
-έχουμε ισοβαθμία μεταξύ δύο ή περισσοτέρων ταινιών για την θέση 10 και μετά, να
-επιστραφεί μία από τις δύο.
-(hint: Να χρησιμοποιηθεί ο τελεστής ORDER BY σε συνδυασμό με τον τελεστή TOP της
-Microsoft SQL)*/
-
+/* 8. The 10 movies with the highest budget (movie_title, budget). In case of a tie for the 10th place or beyond,
+return one of the tied movies. 
+(hint: Use ORDER BY with the TOP operator of Microsoft SQL) */
 SELECT TOP 10 m.title as movie_title, FORMAT(m.budget, '#,###') as budget
 FROM movie m
 ORDER BY m.budget DESC;
 
-/*9. Χρησιμοποιώντας το ερώτημα 5, βρείτε με εμφώλευση την ταινία (ταινίες) με το
-μεγαλύτερο budget ανά χρονιά (year, movies_with_max_budget), έχοντας
-ταξινόμηση ως προς το έτος και το όνομα της ταινίας.*/
+/* 9. Using query 5, find with subquery the movie(s) with the highest budget per year 
+(year, movies_with_max_budget), ordered by year and movie title. */
 SELECT year, title as movies_with_max_budget
 FROM movie m JOIN 
 (
@@ -93,13 +80,9 @@ FROM movie m JOIN
 WHERE mx.max_budget=m.budget
 ORDER BY year, title;
 
-
-/*10. Χρησιμοποιώντας εμφώλευση, επιστρέψτε τους σκηνοθέτες (name, surname) που
-έχουν σκηνοθετήσει τόσο ταινίες τρόμου, όσο και κωμωδίες, αλλά κανένα άλλο είδος
-ταινίας.
-(hint: Μπορούν να χρησιμοποιηθούν οι τελεστές EXISTS, NOT EXISTS μαζί με
-συνθήκη ζεύξης μεταξύ του εξωτερικού και του εσωτερικού ερωτήματος)*/
-
+/* 10. Using subquery, return the directors (name, surname) who have directed both horror and comedy movies,
+but no other genres.
+(hint: You can use the EXISTS and NOT EXISTS operators along with join conditions between the outer and inner query) */
 SELECT SUBSTRING(dir.name, 0, CHARINDEX(' ', dir.name)) as name, SUBSTRING(dir.name, CHARINDEX(' ', dir.name), LEN(dir.name)) as surname
 FROM (
     SELECT DISTINCT cr.person_id, cr.name
@@ -138,8 +121,7 @@ WHERE EXISTS (
     )
 );
 
-/*11. Να απαντηθεί το προηγούμενο ερώτημα χρησιμοποιώντας τελεστές για σύνολα UNION,
-INTERSECT, EXCEPT.*/
+/* 11. Answer the previous question using set operators: UNION, INTERSECT, EXCEPT. */
 WITH filtered AS (
     SELECT cr.name
     FROM hasGenre h
@@ -167,13 +149,10 @@ WITH filtered AS (
 SELECT SUBSTRING(f.name, 0, CHARINDEX(' ', f.name)) as name, SUBSTRING(f.name, CHARINDEX(' ', f.name), LEN(f.name)) as surname
 FROM filtered f;
 
-
-/*Θεωρείστε ότι ένα ζεύγος ταινιών είναι δημοφιλές όταν υπάρχουν πάνω από 10 χρήστες που
-έχουν βαθμολογήσει και τις 2 ταινίες με άνω του 4 βαθμολογία.
-12. Προσδιορίστε το ερώτημα το οποίο θα χρησιμοποιηθεί για να φτιάξουμε ένα view (όψη)
-με το όνομα Popular_Movie_Pairs που περιέχει τα ids από τα δημοφιλή ζεύγη
-ταινιών (id1,id2).*/
-
+/* Assume that a pair of movies is popular when more than 10 users have rated both movies 
+with a rating greater than 4.
+12. Define the query to be used to create a view named Popular_Movie_Pairs 
+containing the IDs of the popular movie pairs (id1, id2). */
 CREATE VIEW Popular_Movie_Pairs AS
 WITH popular_movies AS (
     SELECT movie_id,COUNT(user_id) as total_users
