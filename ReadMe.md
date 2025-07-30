@@ -4,3 +4,6 @@ This project served as a hands-on introduction to relational databases, focusing
 <a href="https://github.com/Morthlog/Databases/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=Morthlog/Databases"/>
 </a>
+
+- [Babis Drosatos](https://github.com/BabisDros)
+- [Iosif Petroulakis](https://github.com/Morthlog)
